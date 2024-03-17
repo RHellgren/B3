@@ -7,15 +7,21 @@
 
 import SwiftUI
 
-struct ContentView: View {
-    var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-        }
-        .padding()
+struct ContentView: UIViewControllerRepresentable {
+    typealias UIViewControllerType = UINavigationController
+
+    func makeUIViewController(
+        context: Context
+    ) -> UINavigationController {
+        UINavigationController(
+            rootViewController: OverviewTableViewController())
+    }
+    
+    func updateUIViewController(
+        _ uiViewController: UINavigationController,
+        context: Context
+    ) {
+        
     }
 }
 
