@@ -12,7 +12,7 @@ final class City {
     let name: String
     let latitude: Double
     let longitude: Double
-    var temperature: Float?
+    var forecasts: Forecasts?
     
     init(
         name: String,
@@ -22,7 +22,7 @@ final class City {
         self.name = name
         self.latitude = latitude
         self.longitude = longitude
-        self.temperature = nil
+        self.forecasts = nil
     }
 }
 
@@ -33,6 +33,7 @@ final class OverviewViewModel {
     private let cities: [City]
     
     var cellViewModels: [OverviewCellViewModel] = []
+    var detailModels: [DetailsViewModel] = []
     
     init(
         didUpdateCallback: (() -> Void)?,
@@ -47,6 +48,7 @@ final class OverviewViewModel {
         self.didUpdateCallback = didUpdateCallback
         self.cities = cities
         updateCellViewModels()
+        updateDetailModels()
     }
 
     func fetchData() async throws {
@@ -54,8 +56,9 @@ final class OverviewViewModel {
             let weatherData = try await service.fetch(
                 latitude: city.latitude,
                 longitude: city.longitude)
-            city.temperature = weatherData.list.first?.main.temperature
+            city.forecasts = weatherData
             updateCellViewModels()
+            updateDetailModels()
             didUpdateCallback?()
         }
     }
@@ -64,7 +67,56 @@ final class OverviewViewModel {
         cellViewModels = cities.compactMap { city in
             OverviewCellViewModel(
                 cityName: city.name,
-                temperature: city.temperature)
+                temperature: city.forecasts?.temperature)
+        }
+    }
+    
+    private func updateDetailModels() {
+        detailModels = cities.compactMap { city in
+            DetailsViewModel(
+                cityName: city.name,
+                currentTemperature: city.forecasts?.temperature,
+                feelsLikeTemperature: city.forecasts?.feelsLikeTemperature,
+                windSpeed: city.forecasts?.windSpeed,
+                humidity: city.forecasts?.humidity,
+                todaysForecasts: city.forecasts?.list
+                    .filter { forecast in Calendar.current.isDateInToday(forecast.date) }
+                    .detailsViewModelForecasts() ?? [],
+                tomorrowsForecasts: city.forecasts?.list
+                    .filter { forecast in Calendar.current.isDateInTomorrow(forecast.date) }
+                    .detailsViewModelForecasts() ?? []
+            )
+        }
+    }
+}
+
+fileprivate extension Forecasts {
+    var temperature: Float? {
+        list.first?.main.temperature
+    }
+    
+    var feelsLikeTemperature: Float? {
+        list.first?.main.feelLike
+    }
+    
+    var windSpeed: Float? {
+        list.first?.wind.speed
+    }
+    
+    var humidity: Int? {
+        list.first?.main.humidity
+    }
+}
+
+fileprivate extension Array where Element == Forecasts.Forecast {
+    func detailsViewModelForecasts() -> [DetailsViewModel.Forecast] {
+        self.compactMap { forecast in
+            guard let icon = forecast.weather.first?.icon else { return nil }
+            return DetailsViewModel.Forecast(
+                time: forecast.date,
+                iconURL: URL(string: "https://openweathermap.org/img/wn/\(icon)@2x.png"),
+                temperature: forecast.main.temperature
+            )
         }
     }
 }

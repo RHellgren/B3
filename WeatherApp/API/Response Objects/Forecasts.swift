@@ -24,15 +24,13 @@ public struct Forecasts: Codable {
         }
 
         public struct Weather: Codable {
-            public let main: String
-            public let description: String
             public let icon: String
         }
         
         public struct Main: Codable {
             public let temperature: Float
             public let feelLike: Float
-            public let humidity: Float
+            public let humidity: Int
             
             enum CodingKeys: String, CodingKey {
                 case temperature = "temp"

@@ -20,9 +20,7 @@ struct ContentView: UIViewControllerRepresentable {
     func updateUIViewController(
         _ uiViewController: UINavigationController,
         context: Context
-    ) {
-        
-    }
+    ) { }
 }
 
 #Preview {

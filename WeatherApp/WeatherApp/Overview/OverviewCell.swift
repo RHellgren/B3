@@ -72,7 +72,7 @@ final class OverviewCell: UITableViewCell {
         temperatureLabel.textColor = Constants.tempTextColor
         
         let accessory = UIImageView(image: Constants.accessoryImage)
-        accessory.tintColor = .gray
+        accessory.tintColor = Constants.disclosureTint
         accessoryView = accessory
         
         selectionStyle = .none
@@ -98,6 +98,7 @@ extension OverviewCell {
         static let accessoryImage = UIImage(systemName: "chevron.right")
         static let loadingString = String(localized: "Loading...")
         static let tempTextColor = UIColor(named: "SecondaryText")
+        static let disclosureTint = UIColor(named: "IconTint")
     }
 }
 

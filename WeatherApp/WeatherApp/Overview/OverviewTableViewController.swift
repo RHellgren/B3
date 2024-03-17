@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SwiftUI
 
 final class OverviewTableViewController: UITableViewController {
     
@@ -93,6 +94,18 @@ final class OverviewTableViewController: UITableViewController {
         
         cell.configure(with: cellViewModel)
         return cell
+    }
+    
+    override func tableView(
+        _ tableView: UITableView,
+        didSelectRowAt indexPath: IndexPath
+    ) {
+        guard let detailsModel = viewModel?.detailModels[safe: indexPath.row] else {
+            return
+        }
+        let view = DetailsView(model: detailsModel)
+        let viewController = UIHostingController(rootView: view)
+        present(viewController, animated: true)
     }
 }
 
