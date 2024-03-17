@@ -1,6 +1,12 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    ", temperature is %@" : {
+
+    },
+    ", temperature loading" : {
+
+    },
     "%f °C" : {
       "localizations" : {
         "en" : {
@@ -36,6 +42,9 @@
 
     },
     "Current temperature" : {
+
+    },
+    "Double tap to see more weather information" : {
 
     },
     "Feels like" : {

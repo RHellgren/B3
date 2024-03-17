@@ -42,6 +42,7 @@ struct DetailsForecastView: View {
                 Spacer()
             }
             .padding(.leading, Constants.forecastPadding)
+            .accessibilityElement(children: .combine)
         }
     }
 }

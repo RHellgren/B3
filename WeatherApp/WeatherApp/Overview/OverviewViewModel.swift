@@ -65,9 +65,22 @@ final class OverviewViewModel {
     
     private func updateCellViewModels() {
         cellViewModels = cities.compactMap { city in
-            OverviewCellViewModel(
+            
+            var accessibilityLabel = city.name
+            let temperatureLabel: String
+            if let temperature = city.forecasts?.temperature {
+                temperatureLabel = String(localized: "\(temperature) °C")
+                accessibilityLabel += String(localized: ", temperature is \(temperatureLabel)")
+            } else {
+                temperatureLabel = String(localized: "Loading...")
+                accessibilityLabel += String(localized: ", temperature loading")
+            }
+
+            return OverviewCellViewModel(
                 cityName: city.name,
-                temperature: city.forecasts?.temperature)
+                temperature: temperatureLabel,
+                accessibilityLabel: accessibilityLabel
+            )
         }
     }
     

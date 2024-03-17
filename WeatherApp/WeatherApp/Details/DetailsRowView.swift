@@ -22,6 +22,7 @@ struct DetailsRowView: View {
             }
         }
         .padding(.horizontal)
+        .accessibilityElement(children: .combine)
     }
 }
 

@@ -24,6 +24,7 @@ final class OverviewCell: UITableViewCell {
         makeViews()
         makeLayout()
         makeStyle()
+        makeAccessibility()
     }
     
     private func makeViews() {
@@ -78,16 +79,18 @@ final class OverviewCell: UITableViewCell {
         selectionStyle = .none
     }
     
+    private func makeAccessibility() {
+        accessibilityTraits = .button
+        accessibilityHint = Constants.accessibilityHint
+    }
+    
     func configure(
         with viewModel: OverviewCellViewModel
     ) {
         cityLabel.text = viewModel.cityName
+        temperatureLabel.text = viewModel.temperature
         
-        if let temperature = viewModel.temperature {
-            temperatureLabel.text = String(localized: "\(temperature) °C")
-        } else {
-            temperatureLabel.text = Constants.loadingString
-        }
+        accessibilityLabel = viewModel.accessibilityLabel
     }
 }
 
@@ -96,13 +99,14 @@ extension OverviewCell {
         static let edgeInsets: CGFloat = 12
         static let numberOfLines = 0
         static let accessoryImage = UIImage(systemName: "chevron.right")
-        static let loadingString = String(localized: "Loading...")
         static let tempTextColor = UIColor(named: "SecondaryText")
         static let disclosureTint = UIColor(named: "IconTint")
+        static let accessibilityHint = String(localized: "Double tap to see more weather information")
     }
 }
 
 struct OverviewCellViewModel {
     let cityName: String
-    let temperature: Float?
+    let temperature: String
+    let accessibilityLabel: String
 }
